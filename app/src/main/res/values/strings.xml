@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Retrofit</string>
+    <string name="avatar">avatar</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="login">Войти</string>
+    <string name="next">Далее</string>
+    <string name="add_login">Введите логин</string>
+    <string name="add_password">Введите пароль</string>
+</resources>

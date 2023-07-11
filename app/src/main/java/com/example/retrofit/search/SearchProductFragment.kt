@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.retrofit.R
 import com.example.retrofit.adapter.ProductAdapter
 import com.example.retrofit.databinding.FragmentSearchProductBinding
 import com.example.retrofit.retrofit.MainApi
+import com.example.retrofit.weather.WeatherFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,6 +76,15 @@ class SearchProductFragment : Fragment() {
 
         })
 
-
+        binding.btnNextWeather.setOnClickListener {
+            next()
+        }
     }
+
+    private fun next() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, WeatherFragment())
+            .commit()
+    }
+
 }

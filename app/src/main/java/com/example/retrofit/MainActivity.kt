@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-
     fun navTo(fragment : Fragment) {
         this.supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, fragment)

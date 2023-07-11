@@ -7,4 +7,6 @@
     <string name="next">Далее</string>
     <string name="add_login">Введите логин</string>
     <string name="add_password">Введите пароль</string>
+    <string name="next_to_weather">перейти к погоде</string>
+    <string name="get_a_forecast">Получить прогноз погоды</string>
 </resources>

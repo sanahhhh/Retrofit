@@ -1,4 +1,4 @@
-package com.example.retrofit.product
+package com.example.retrofit.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.retrofit.R
 import com.example.retrofit.adapter.ProductAdapter
-import com.example.retrofit.databinding.FragmentProductsBinding
+import com.example.retrofit.databinding.FragmentSearchProductBinding
 import com.example.retrofit.retrofit.MainApi
-import com.example.retrofit.search.SearchProductFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +17,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ProductsFragment : Fragment() {
 
-    private var _binding: FragmentProductsBinding? = null
-    private val binding: FragmentProductsBinding
-        get() = _binding ?: throw RuntimeException("FragmentProductsBinding == null")
+class SearchProductFragment : Fragment() {
+
+    private var _binding: FragmentSearchProductBinding? = null
+    private val binding: FragmentSearchProductBinding
+        get() = _binding ?: throw RuntimeException("FragmentSearchProductBinding == null")
 
     private lateinit var adapter: ProductAdapter
 
@@ -32,15 +31,15 @@ class ProductsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProductsBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchProductBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = ProductAdapter()
-        binding.rvList.layoutManager = LinearLayoutManager(context)
-        binding.rvList.adapter = adapter
+        binding.rvSearch.layoutManager = LinearLayoutManager(context)
+        binding.rvSearch.adapter = adapter
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -57,28 +56,24 @@ class ProductsFragment : Fragment() {
 
         val mainApi = retrofit.create(MainApi::class.java)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val products = mainApi.getAllProducts()
-            binding.apply {
-                adapter.submitList(products.products)
+        binding.searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
             }
-        }
 
-        binding.faButton.setOnClickListener{
-            next()
-        }
+            override fun onQueryTextChange(text: String?): Boolean {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val list = text?.let { mainApi.getProductsByName(it) }
+                    binding.apply {
+                        adapter.submitList(list?.products)
+                    }
+                }
+                return true
+            }
+
+        })
+
+
     }
-
-
-    private fun next() {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, SearchProductFragment())
-            .commit()
-    }
-
-//    runOnUiThread {
-//        binding.apply {
-//            adapter.submitList(products.products)
-//        }
-//    }
 }
